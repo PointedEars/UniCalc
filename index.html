@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>UniCalc (Unicode Calculator) — PointedEars’ Website</title>
+    <style type="text/css">
+      <!--
+      table {
+        width: 100%;
+      }
+      
+      th {
+        width: 8em;
+        text-align: right;
+      }
+
+      th:after {
+        content: ":";
+      }
+      
+      [lang^="fr"] th:after {
+        content: "\00A0 :";
+      }
+      
+      .td3 {
+        width: 8em;
+      }
+      
+      input {
+        width: 100%;
+      }
+      -->
+    </style>
+    <script type="text/javascript" src="../builder?src=object,regexp"></script>
+    <script type="text/javascript" src="unicalc.js"></script>
+  </head>
+  <body>
+    <h1>UniCalc – Unicode Calculator</h1>
+    <form action="http://www.google.com/search" target="result"
+          onsubmit="return calc(this)">
+      <table>
+        <tr>
+          <th><label for="unicode">Unicode <u>f</u>ormula</label></th>
+          <td><input type="search" id="unicode" name="unicode" accesskey="f"
+            onkeyup="toASCII(this)"
+            oninput="toASCII(this)"
+            ></td>
+        </tr>
+        <tr>
+          <th><label for="ascii"><u>A</u>SCII formula</label></th>
+          <td><input type="search" id="ascii" name="q" accesskey="a"
+            onkeyup="toUnicode(this)"
+            oninput="toUnicode(this)"
+            ></td>
+          <td class="td3"><input type="submit" value="Calculate (Google)"></td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>
