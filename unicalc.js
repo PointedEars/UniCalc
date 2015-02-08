@@ -3,8 +3,9 @@ function toASCII (unicode)
   var ascii = new jsx.regexp.String(unicode.value).replace(
     jsx.regexp.RegExp(
         "(?<operand>[−×∕])|(?<root>[√])|(?<delim>'+)"
-      + "|(?<exponent>[⁰¹²³\u2074-\u2079⁺⁻⁽⁾]+)"
-      + "|\\b(?<const>g)\\b",
+      + "|(?<superscript>[⁰¹²³\u2074-\u2079⁺⁻⁽⁾⁼]+)"
+      + "|(?<subscript>[₀₁₂₃₊₍₎₌]+)"
+      + "|\\b(?<greek>[αγπ])\\b",
       "g"),
     function (match) {
       var groups = this.groups;
@@ -23,8 +24,6 @@ function toASCII (unicode)
         switch (match)
         {
           case "√": return "sqrt";
-          default:
-            return match;
         }
       }
 
@@ -33,9 +32,9 @@ function toASCII (unicode)
         return "";
       }
 
-      if (groups["exponent"])
+      if (groups["superscript"])
       {
-        var exponent = match.replace(
+        var superscript = match.replace(
           /./g,
           function (match) {
             switch (match)
@@ -60,15 +59,38 @@ function toASCII (unicode)
             }
           });
 
-        return "^(" + exponent + ")";
+        return "^(" + superscript + ")";
       }
 
-      if (groups["const"])
+      if (groups["subscript"])
       {
-        switch (match)
-        {
-          case "g": return "9.81 m/s^2";
-        }
+        var subscript_map = {
+          "₀": "0",
+          "₁": "1",
+          "₂": "2",
+          "₃": "3",
+          "₊": "+",
+          "₌": "=",
+          "₍": "(",
+          "₎": ")"
+        };
+
+        var subscript = match.replace(/./g, function (match) {
+          return subscript_map[match];
+        });
+
+        return "^(" + subscript + ")";
+      }
+
+      if (groups["greek"])
+      {
+        var greek_map = {
+          "α": "alpha ",
+          "γ": "gamma ",
+          "π": "pi "
+        };
+
+        return greek_map[match];
       }
 
       return match;
@@ -81,7 +103,11 @@ function toUnicode (ascii)
 {
   var unicode = new jsx.regexp.String(ascii.value).replace(
     jsx.regexp.RegExp(
-      "(?<operand>[-*/])|\\b(?<root>(sq|cub)rt)\\b|\\^(?<exponent>[\\d()]+)",
+      "(?<operand>[-*/])"
+      + "|\\b(?<root>(sq|cub)rt)\\b"
+      + "|\\^(?<superscript>[\\d=()+-]+)"
+      + "|_(?<subscript>[\\d()+]+)"
+      + "|(?=\\d|\\b)?(?<greek>alpha|gamma)\\b",
       "g"),
     function (match) {
       var groups = this.groups;
@@ -105,9 +131,9 @@ function toUnicode (ascii)
         }
       }
 
-      if (groups["exponent"])
+      if (groups["superscript"])
       {
-        var exponent = groups["exponent"].replace(
+        var superscript = groups["superscript"].replace(
           /./g,
           function (match) {
             switch (match)
@@ -116,11 +142,11 @@ function toUnicode (ascii)
               case "1": return "¹";
               case "2": return "²";
               case "3": return "³";
-              case "+": return "⁺";
-              case "-": return "⁻";
               case "=": return "⁼";
               case "(": return "⁽";
               case ")": return "⁾";
+              case "+": return "⁺";
+              case "-": return "⁻";
               default:
                 if (/[4-9]/.test(match))
                 {
@@ -132,7 +158,40 @@ function toUnicode (ascii)
             }
           });
 
-        return exponent;
+        return superscript;
+      }
+
+      if (groups["subscript"])
+      {
+        var subscript = groups["subscript"].replace(
+          /./g,
+          function (match) {
+            switch (match)
+            {
+              case "0": return "₀";
+              case "1": return "₁";
+              case "2": return "₂";
+              case "3": return "₃";
+              case "(": return "₍";
+              case ")": return "₎";
+              case "+": return "₊";
+            }
+
+            return match;
+          });
+
+        return subscript;
+      }
+
+      if (groups["greek"])
+      {
+        var greek_map = {
+          "alpha": "α",
+          "gamma": "γ",
+          "pi":    "π"
+        };
+
+        return greek_map[match];
       }
 
       return match;
