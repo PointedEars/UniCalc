@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+
 function toASCII (unicode)
 {
   var ascii = new jsx.regexp.String(unicode.value).replace(
