@@ -136,29 +136,31 @@ function toUnicode (ascii)
 
       if (groups["superscript"])
       {
+        var superscript_map = {
+          "0": "⁰",
+          "1": "¹",
+          "2": "²",
+          "3": "³",
+          "=": "⁼",
+          "(": "⁽",
+          ")": "⁾",
+          "+": "⁺",
+          "-": "⁻",
+          'i': 'ⁱ'
+        };
+
         var superscript = (groups['super-in-braces'] || groups['super-standalone']).replace(
           /./g,
           function (match) {
-            switch (match)
-            {
-              case "0": return "⁰";
-              case "1": return "¹";
-              case "2": return "²";
-              case "3": return "³";
-              case "=": return "⁼";
-              case "(": return "⁽";
-              case ")": return "⁾";
-              case "+": return "⁺";
-              case "-": return "⁻";
-              default:
-                if (/[4-9]/.test(match))
-                {
-                  return String.fromCharCode(
-                    match.charCodeAt(0) - 0x30 + 0x2070);
-                }
-
-                return match;
+            if (match in superscript_map) {
+              return superscript_map[match];
             }
+
+            if (/[4-9]/.test(match)) {
+              return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2070);
+            }
+
+            return match;
           });
 
         return superscript;
