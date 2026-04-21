@@ -108,7 +108,7 @@ function toUnicode (ascii)
     jsx.regexp.RegExp(
       "(?<operand>[-*/])"
       + "|\\b(?<root>(sq|cub)rt)\\b"
-      + "|\\^(?<superscript>[\\d=()+-]+)"
+      + "|\\^(?<superscript>\\{(?<super-in-braces>.+?)\\}|(?<super-standalone>\\S+))"
       + "|_(?<subscript>[\\d()+]+)"
       + "|(?=\\d|\\b)?(?<greek>alpha|gamma)\\b",
       "g"),
@@ -136,7 +136,7 @@ function toUnicode (ascii)
 
       if (groups["superscript"])
       {
-        var superscript = groups["superscript"].replace(
+        var superscript = (groups['super-in-braces'] || groups['super-standalone']).replace(
           /./g,
           function (match) {
             switch (match)
