@@ -1,13 +1,66 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
+var superscript_ASCII2UC_map = {
+  "0": "⁰",
+  "1": "¹",
+  "2": "²",
+  "3": "³",
+  "=": "⁼",
+  "(": "⁽",
+  ")": "⁾",
+  "+": "⁺",
+  "-": "⁻",
+  'i': 'ⁱ'
+};
+
+var subscript_ASCII2UC_map = {
+  "0": "₀",
+  "1": "₁",
+  "2": "₂",
+  "3": "₃",
+  "(": "₍",
+  ")": "₎",
+  "+": "₊"
+};
+
+/**
+ * Return a new object where the property names and values of the source object
+ * have been switched.
+ *
+ * Note that the new object inherits from the source object.  Existing properties,
+ * including methods, are preserved and inherited from the same prototype.
+ *
+ * @param {Object} obj Source object
+ * @returns {Object}
+ */
+Object.switch = function (obj) {
+  var switched = Object.create(obj);
+
+  Object.keys(obj).forEach(function (key) {
+    var value = obj[key];
+    if (value in switched) {
+      throw jsx.object.ObjectError('A property with the name "' + value
+        + '" already exists and would be overwritten by switching property names and values.'
+        + ' This must be handled manually.');
+    }
+
+    switched[value] = key;
+  });
+
+  return switched;
+};
+
+var superscript_UC2ASCII_map = Object.switch(superscript_ASCII2UC_map);
+var subscript_UC2ASCII_map = Object.switch(subscript_ASCII2UC_map);
+
 function toASCII (unicode)
 {
   var ascii = new jsx.regexp.String(unicode.value).replace(
     jsx.regexp.RegExp(
         "(?<operand>[−×∕])|(?<root>[√])|(?<delim>'+)"
       + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
-      + "|(?<subscript>[₀₁₂₃₊₍₎₌]+)"
+      + "|(?<subscript>[\\u2080-\\u208e]+)"
       + "|\\b(?<greek>[αγπ])\\b",
       "g"),
     function (match) {
@@ -40,26 +93,18 @@ function toASCII (unicode)
         var superscript = match.replace(
           /./g,
           function (match) {
-            switch (match)
-            {
-              case "⁰": return "0";
-              case "¹": return "1";
-              case "²": return "2";
-              case "³": return "3";
-              case "⁺": return "+";
-              case "⁻": return "-";
-              case "⁼": return "=";
-              case "⁽": return "(";
-              case "⁾": return ")";
-              default:
-                if (/[\u2074-\u2079]/.test(match))
-                {
-                  return String.fromCharCode(
-                    0x30 + (match.charCodeAt(0) - 0x2070));
-                }
-
-                return match;
+            if (match in superscript_UC2ASCII_map) {
+              return superscript_UC2ASCII_map[match];
             }
+
+            /* Superscript 4 to 9 */
+            if (/[\u2074-\u2079]/.test(match))
+            {
+              return String.fromCharCode(
+                0x30 + (match.charCodeAt(0) - 0x2070));
+            }
+
+            return match;
           });
 
         return "^(" + superscript + ")";
@@ -67,19 +112,19 @@ function toASCII (unicode)
 
       if (groups["subscript"])
       {
-        var subscript_map = {
-          "₀": "0",
-          "₁": "1",
-          "₂": "2",
-          "₃": "3",
-          "₊": "+",
-          "₌": "=",
-          "₍": "(",
-          "₎": ")"
-        };
-
         var subscript = match.replace(/./g, function (match) {
-          return subscript_map[match];
+            if (match in subscript_UC2ASCII_map) {
+              return subscript_UC2ASCII_map[match];
+            }
+
+            /* Subscript 4 to 9 */
+            if (/[\u2080-\u208e]/.test(match))
+            {
+              return String.fromCharCode(
+                0x30 + (match.charCodeAt(0) - 0x2080));
+          }
+
+          return match;
         });
 
         return "_(" + subscript + ")";
@@ -136,24 +181,11 @@ function toUnicode (ascii)
 
       if (groups["superscript"])
       {
-        var superscript_map = {
-          "0": "⁰",
-          "1": "¹",
-          "2": "²",
-          "3": "³",
-          "=": "⁼",
-          "(": "⁽",
-          ")": "⁾",
-          "+": "⁺",
-          "-": "⁻",
-          'i': 'ⁱ'
-        };
-
         var superscript = (groups['super-in-braces'] || groups['super-standalone']).replace(
           /./g,
           function (match) {
-            if (match in superscript_map) {
-              return superscript_map[match];
+            if (match in superscript_ASCII2UC_map) {
+              return superscript_ASCII2UC_map[match];
             }
 
             if (/[4-9]/.test(match)) {
@@ -171,15 +203,12 @@ function toUnicode (ascii)
         var subscript = groups["subscript"].replace(
           /./g,
           function (match) {
-            switch (match)
-            {
-              case "0": return "₀";
-              case "1": return "₁";
-              case "2": return "₂";
-              case "3": return "₃";
-              case "(": return "₍";
-              case ")": return "₎";
-              case "+": return "₊";
+            if (match in subscript_ASCII2UC_map) {
+              return subscript_ASCII2UC_map[match];
+            }
+
+            if (/[4-9]/.test(match)) {
+              return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2080);
             }
 
             return match;
