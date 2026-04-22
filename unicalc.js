@@ -6,7 +6,7 @@ function toASCII (unicode)
   var ascii = new jsx.regexp.String(unicode.value).replace(
     jsx.regexp.RegExp(
         "(?<operand>[−×∕])|(?<root>[√])|(?<delim>'+)"
-      + "|(?<superscript>[⁰¹²³\u2074-\u2079⁺⁻⁽⁾⁼]+)"
+      + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
       + "|(?<subscript>[₀₁₂₃₊₍₎₌]+)"
       + "|\\b(?<greek>[αγπ])\\b",
       "g"),
