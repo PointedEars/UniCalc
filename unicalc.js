@@ -82,7 +82,7 @@ function toASCII (unicode)
           return subscript_map[match];
         });
 
-        return "^(" + subscript + ")";
+        return "_(" + subscript + ")";
       }
 
       if (groups["greek"])
