@@ -60,7 +60,7 @@ Object.switch = function (obj) {
   Object.keys(obj).forEach(function (key) {
     var value = obj[key];
     if (value in switched) {
-      throw jsx.object.ObjectError('A property with the name "' + value
+      throw new jsx.object.ObjectError('A property with the name "' + value
         + '" already exists and would be overwritten by switching property names and values.'
         + ' This must be handled manually.');
     }
