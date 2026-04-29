@@ -13,11 +13,14 @@ var superscript_ASCII2UC_map = {
   "-": "⁻",
   'T': 'ᵀ',
   'a': 'ᵃ',
+  'alpha': 'ᵅ',
   'b': 'ᵇ',
   'g': 'ᵍ',
   'i': 'ⁱ',
   'k': 'ᵏ',
   'n': 'ⁿ',
+  'beta': 'ᵝ',
+  'inf': '\u1AB2' /* U+1AB2 COMBINING INFINITY */
 };
 
 var subscript_ASCII2UC_map = {
@@ -31,6 +34,7 @@ var subscript_ASCII2UC_map = {
   "(": "₍",
   ")": "₎",
   'a': 'ₐ',
+  'beta': 'ᵦ',
   'e': 'ₑ',
   'h': 'ₕ',
   'k': 'ₖ',
@@ -213,7 +217,7 @@ function toUnicode (ascii)
       if (groups["superscript"])
       {
         var superscript = (groups['superscript-in-braces'] || groups['superscript-standalone']).replace(
-          /./g,
+          /alpha|beta|inf(?:ty)?|./g,
           function (match) {
             if (match in superscript_ASCII2UC_map) {
               return superscript_ASCII2UC_map[match];
@@ -232,7 +236,7 @@ function toUnicode (ascii)
       if (groups["subscript"])
       {
         var subscript = (groups['subscript-in-braces'] || groups['subscript-standalone']).replace(
-          /./g,
+          /beta|./g,
           function (match) {
             if (match in subscript_ASCII2UC_map) {
               return subscript_ASCII2UC_map[match];
