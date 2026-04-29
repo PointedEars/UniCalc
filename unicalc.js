@@ -85,7 +85,7 @@ function toASCII (unicode)
         "(?<operator>[−×∕])|(?<root>[√])|(?<delim>'+)"
       + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
       + "|(?<subscript>[\\u2080-\\u208e]+)"
-      + "|\\b(?<greek>[αγπ])\\b",
+      + "|\\b(?<greek>[αγηπ])\\b",
       "g"),
     function (match) {
       var groups = this.groups;
@@ -159,6 +159,8 @@ function toASCII (unicode)
         var greek_map = {
           "α": "alpha ",
           "γ": "gamma ",
+          'η': 'eta ',
+          'θ': 'theta ',
           "π": "pi "
         };
 
@@ -179,7 +181,7 @@ function toUnicode (ascii)
       + "|\\b(?<root>(sq|cub)rt)\\b"
       + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
       + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
-      + "|(?=\\d|\\b)?(?<greek>alpha|gamma)\\b",
+      + "|(?=\\d|\\b)?(?<greek>alpha|gamma|eta|theta|pi)\\b",
       "g"),
     function (match) {
       var groups = this.groups;
@@ -257,7 +259,9 @@ function toUnicode (ascii)
         var greek_map = {
           "alpha": "α",
           "gamma": "γ",
-          "pi":    "π"
+          'eta': 'η',
+          'theta': 'θ',
+          "pi": "π"
         };
 
         return greek_map[match];
