@@ -11,7 +11,13 @@ var superscript_ASCII2UC_map = {
   ")": "⁾",
   "+": "⁺",
   "-": "⁻",
-  'i': 'ⁱ'
+  'T': 'ᵀ',
+  'a': 'ᵃ',
+  'b': 'ᵇ',
+  'g': 'ᵍ',
+  'i': 'ⁱ',
+  'k': 'ᵏ',
+  'n': 'ⁿ',
 };
 
 var subscript_ASCII2UC_map = {
@@ -19,9 +25,23 @@ var subscript_ASCII2UC_map = {
   "1": "₁",
   "2": "₂",
   "3": "₃",
+  "+": "₊",
+  "-": "₋",
+  '=': '₌',
   "(": "₍",
   ")": "₎",
-  "+": "₊"
+  'a': 'ₐ',
+  'e': 'ₑ',
+  'h': 'ₕ',
+  'k': 'ₖ',
+  'l': 'ₗ',
+  'm': 'ₘ',
+  'n': 'ₙ',
+  'o': 'ₒ',
+  'p': 'ₚ',
+  's': 'ₛ',
+  't': 'ₜ',
+  'x': 'ₓ'
 };
 
 /**
@@ -153,8 +173,8 @@ function toUnicode (ascii)
     jsx.regexp.RegExp(
       "(?<operand>[-*/])"
       + "|\\b(?<root>(sq|cub)rt)\\b"
-      + "|\\^(?<superscript>\\{(?<super-in-braces>.+?)\\}|(?<super-standalone>\\S+))"
-      + "|_(?<subscript>[\\d()+]+)"
+      + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
+      + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
       + "|(?=\\d|\\b)?(?<greek>alpha|gamma)\\b",
       "g"),
     function (match) {
@@ -181,7 +201,7 @@ function toUnicode (ascii)
 
       if (groups["superscript"])
       {
-        var superscript = (groups['super-in-braces'] || groups['super-standalone']).replace(
+        var superscript = (groups['superscript-in-braces'] || groups['superscript-standalone']).replace(
           /./g,
           function (match) {
             if (match in superscript_ASCII2UC_map) {
@@ -200,7 +220,7 @@ function toUnicode (ascii)
 
       if (groups["subscript"])
       {
-        var subscript = groups["subscript"].replace(
+        var subscript = (groups['subscript-in-braces'] || groups['subscript-standalone']).replace(
           /./g,
           function (match) {
             if (match in subscript_ASCII2UC_map) {
