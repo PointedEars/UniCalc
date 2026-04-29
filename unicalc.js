@@ -78,14 +78,14 @@ function toASCII (unicode)
 {
   var ascii = new jsx.regexp.String(unicode.value).replace(
     jsx.regexp.RegExp(
-        "(?<operand>[−×∕])|(?<root>[√])|(?<delim>'+)"
+        "(?<operator>[−×∕])|(?<root>[√])|(?<delim>'+)"
       + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
       + "|(?<subscript>[\\u2080-\\u208e]+)"
       + "|\\b(?<greek>[αγπ])\\b",
       "g"),
     function (match) {
       var groups = this.groups;
-      if (groups["operand"])
+      if (groups["operator"])
       {
         switch (match)
         {
@@ -171,7 +171,7 @@ function toUnicode (ascii)
 {
   var unicode = new jsx.regexp.String(ascii.value).replace(
     jsx.regexp.RegExp(
-      "(?<operand>[-*/])"
+      "(?<operator>[-*/]|(?:\\\\|\\b)(?<operator-macro>approx|neq|int|sum))"
       + "|\\b(?<root>(sq|cub)rt)\\b"
       + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
       + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
@@ -179,7 +179,18 @@ function toUnicode (ascii)
       "g"),
     function (match) {
       var groups = this.groups;
-      if (groups["operand"])
+
+      if (groups['operator-macro'])
+      {
+        return jsx.object.getProperty({
+          'approx': '≈',
+          'int': '∫',
+          'neq': '≠',
+          'sum': '∑'
+        }, groups['operator-macro']);
+      }
+
+      if (groups["operator"])
       {
         return jsx.object.getProperty({
           "-": "−",
