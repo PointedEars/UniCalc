@@ -1,6 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
+var blackboard_map = jsx.object.getDataObject({
+  'C': 'ℂ',
+  'H': 'ℍ',
+  'N': 'ℕ',
+  'P': 'ℙ',
+  'Q': 'ℚ',
+  'R': 'ℝ',
+  'Z': 'ℤ'
+});
+
 var superscript_ASCII2UC_map = {
   "0": "⁰",
   "1": "¹",
@@ -178,6 +188,7 @@ function toUnicode (ascii)
   var unicode = new jsx.regexp.String(ascii.value).replace(
     jsx.regexp.RegExp(
       "(?<operator>[-*/]|(?:\\\\|\\b)(?<operator-macro>approx|neq|int|sum))"
+      + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
       + "|\\b(?<root>(sq|cub)rt)\\b"
       + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
       + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
@@ -203,6 +214,10 @@ function toUnicode (ascii)
           "*": "×",
           "/": "∕"
         }, match);
+      }
+
+      if (groups['blackboard']) {
+        return jsx.object.getProperty(blackboard_map, groups['blackboard']);
       }
 
       if (groups["root"])
