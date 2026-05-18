@@ -238,7 +238,10 @@ function toUnicode (ascii)
 
       if (groups["superscript"])
       {
-        var superscript = (groups['superscript-in-braces'] || groups['superscript-standalone']).replace(
+        var superscript_all_converted = true;
+
+        var superscript_ASCII = groups['superscript-in-braces'] || groups['superscript-standalone'];
+        var superscript_UC = superscript_ASCII.replace(
           /alpha|beta|inf(?:ty)?|./g,
           function (match) {
             if (match in superscript_ASCII2UC_map) {
@@ -249,10 +252,16 @@ function toUnicode (ascii)
               return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2070);
             }
 
+            superscript_all_converted = false;
+
             return match;
           });
 
-        return superscript;
+        if (!superscript_all_converted) {
+          return superscript_ASCII;
+        }
+
+        return superscript_UC;
       }
 
       if (groups["subscript"])
