@@ -141,7 +141,7 @@ function toASCII (unicode)
             return match;
           });
 
-        return "^(" + superscript + ")";
+        return "^{" + superscript + "}";
       }
 
       if (groups["subscript"])
@@ -161,7 +161,7 @@ function toASCII (unicode)
           return match;
         });
 
-        return "_(" + subscript + ")";
+        return "_{" + subscript + "}";
       }
 
       if (groups["greek"])
@@ -258,7 +258,11 @@ function toUnicode (ascii)
           });
 
         if (!superscript_all_converted) {
-          return superscript_ASCII;
+          if (groups['superscript-in-braces']) {
+            return '^{' + superscript_ASCII + '}';
+          }
+
+          return '^' + superscript_ASCII;
         }
 
         return superscript_UC;
