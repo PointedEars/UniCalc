@@ -187,7 +187,7 @@ function toUnicode (ascii)
 {
   var unicode = new jsx.regexp.String(ascii.value).replace(
     jsx.regexp.RegExp(
-      "(?<operator>(!=|:=|=:|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|in|sum))"
+      "(?<operator>(!=|:=|=:|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))"
       + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
       + "|\\b(?<root>(sq|cub)rt)\\b"
       + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
@@ -201,9 +201,13 @@ function toUnicode (ascii)
       {
         return jsx.object.getProperty({
           'approx': '≈',
-          'in': '∈',
+          'not in': '∉',
+          'notin': '∉',
           'int': '∫',
           'neq': '≠',
+          'ne': '≠',
+          'in': '∈',
+          'ne': '≠',
           'sum': '∑'
         }, groups['operator-macro']);
       }
