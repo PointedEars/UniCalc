@@ -88,15 +88,17 @@ Object.switch = function (obj) {
 var superscript_UC2ASCII_map = Object.switch(superscript_ASCII2UC_map);
 var subscript_UC2ASCII_map = Object.switch(subscript_ASCII2UC_map);
 
+var rxUC2ASCII = jsx.regexp.RegExp(
+  "(?<operator>[−×∕])|(?<root>[√])|(?<delim>'+)"
+  + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
+  + "|(?<subscript>[\\u2080-\\u208e]+)"
+  + "|\\b(?<greek>[αγηπ])\\b",
+  "g");
+
 function toASCII (unicode)
 {
   var ascii = new jsx.regexp.String(unicode.value).replace(
-    jsx.regexp.RegExp(
-        "(?<operator>[−×∕])|(?<root>[√])|(?<delim>'+)"
-      + "|(?<superscript>[⁰ⁱ¹²³\\u2074-\\u207e]+)"
-      + "|(?<subscript>[\\u2080-\\u208e]+)"
-      + "|\\b(?<greek>[αγηπ])\\b",
-      "g"),
+    rxUC2ASCII,
     function (match) {
       var groups = this.groups;
       if (groups["operator"])
@@ -183,17 +185,19 @@ function toASCII (unicode)
   unicode.form.elements["q"].value = ascii;
 }
 
+var rxASCII2UC = jsx.regexp.RegExp(
+  "(?<operator>(!=|:=|=:|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))"
+  + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
+  + "|\\b(?<root>(sq|cub)rt)\\b"
+  + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
+  + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
+  + "|(?=\\d|\\b)?(?<greek>alpha|gamma|eta|theta|pi)\\b",
+  "g");
+
 function toUnicode (ascii)
 {
   var unicode = new jsx.regexp.String(ascii.value).replace(
-    jsx.regexp.RegExp(
-      "(?<operator>(!=|:=|=:|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))"
-      + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
-      + "|\\b(?<root>(sq|cub)rt)\\b"
-      + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
-      + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
-      + "|(?=\\d|\\b)?(?<greek>alpha|gamma|eta|theta|pi)\\b",
-      "g"),
+    rxASCII2UC,
     function (match) {
       var groups = this.groups;
 
