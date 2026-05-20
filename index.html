@@ -46,21 +46,21 @@
           onsubmit="return calc(this)">
       <table>
         <tr>
-          <th><label for="unicode">Unicode <u>f</u>ormula</label></th>
-          <td><input type="search" id="unicode" name="unicode" accesskey="f"
-            onkeyup="toASCII(this)"
-            oninput="toASCII(this)"
-            ></td>
-          <td class="td3"><input type="button" value="Copy" onclick='navigator.clipboard.writeText(this.form["unicode"].value)'></td>
-        </tr>
-        <tr>
           <th><label for="ascii"><u>A</u>SCII formula</label></th>
           <td><input type="search" id="ascii" name="q" accesskey="a"
             onkeyup="toUnicode(this)"
             oninput="toUnicode(this)"
             ></td>
-          <td class="td3"><input type="submit" value="Calculate (Google)"></td>
-        </tr>
+            <td class="td3"><input type="submit" value="Calculate (Google)"></td>
+          </tr>
+          <tr>
+            <th><label for="unicode">Unicode <u>f</u>ormula</label></th>
+            <td><input type="search" id="unicode" name="unicode" accesskey="f"
+              onkeyup="toASCII(this)"
+              oninput="toASCII(this)"
+              ></td>
+            <td class="td3"><input type="button" value="Copy" onclick='navigator.clipboard.writeText(this.form["unicode"].value)'></td>
+          </tr>
       </table>
     </form>
   </body>
