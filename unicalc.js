@@ -287,7 +287,10 @@ function toUnicode (ascii)
 
       if (groups["subscript"])
       {
-        var subscript = (groups['subscript-in-braces'] || groups['subscript-standalone']).replace(
+        var subscript_all_converted = true;
+
+        var subscript_ASCII = groups['subscript-in-braces'] || groups['subscript-standalone'];
+        var subscript_UC = subscript_ASCII.replace(
           /beta|./g,
           function (match) {
             if (match in subscript_ASCII2UC_map) {
@@ -298,10 +301,20 @@ function toUnicode (ascii)
               return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2080);
             }
 
+            subscript_all_converted = false;
+
             return match;
           });
 
-        return subscript;
+        if (!subscript_all_converted) {
+          if (groups['subscript-in-braces']) {
+            return '_{' + subscript_ASCII + '}';
+          }
+
+          return '_' + subscript_ASCII;
+        }
+
+        return subscript_UC;
       }
 
       if (groups["greek"])
