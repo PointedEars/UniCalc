@@ -11,6 +11,58 @@ var blackboard_map = jsx.object.getDataObject({
   'Z': 'ℤ'
 });
 
+var greek_map = {
+  'alpha': 'α',
+  'beta': 'β',
+  'gamma': 'γ',
+  'delta': 'δ',
+  'epsilon': 'ε',
+  'zeta': 'ζ',
+  'eta': 'η',
+  'theta': 'θ',
+  'iota': 'ι',
+  'kappa': 'κ',
+  'lambda': 'λ',
+  'mu': 'μ',
+  'nu': 'ν',
+  'xi': 'ξ',
+  'omicron': 'ο',
+  'pi': 'π',
+  'rho': 'ρ',
+  'varsigma': 'ς',
+  'sigma': 'σ',
+  'tau': 'τ',
+  'upsilon': 'υ',
+  'phi': 'φ',
+  'chi': 'χ',
+  'psi': 'ψ',
+  'omega': 'ω',
+  'Alpha': 'Α',
+  'Beta': 'Β',
+  'Gamma': 'Γ',
+  'Delta': 'Δ',
+  'Epsilon': 'Ε',
+  'Zeta': 'Ζ',
+  'Eta': 'Η',
+  'Theta': 'Θ',
+  'Iota': 'Ι',
+  'Kappa': 'Κ',
+  'Lambda': 'Λ',
+  'Mu': 'Μ',
+  'Nu': 'Ν',
+  'Xi': 'Ξ',
+  'Omicron': 'Ο',
+  'Pi': 'Π',
+  'Rho': 'Ρ',
+  'Sigma': 'Σ',
+  'Tau': 'Τ',
+  'Upsilon': 'Υ',
+  'Phi': 'Φ',
+  'Chi': 'Χ',
+  'Psi': 'Ψ',
+  'Omega': 'Ω'
+};
+
 var superscript_ASCII2UC_map = {
   "0": "⁰",
   "1": "¹",
@@ -186,12 +238,12 @@ function toASCII (unicode)
 }
 
 var rxASCII2UC = jsx.regexp.RegExp(
-  "(?<operator>(!=|:=|=:|<==|<=|>=|<?-->|<--|\\|->|<?==>|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))"
+  '(?<operator>(!=|:=|=:|<==|<=|>=|<?-->|<--|\\|->|<?==>|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))'
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
-  + "|\\b(?<root>(sq|cub)rt)\\b"
-  + "|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))"
-  + "|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))"
-  + "|(?=\\d|\\b)?(?<greek>alpha|gamma|eta|theta|pi)\\b",
+  + '|\\b(?<root>(sq|cub)rt)\\b'
+  + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))'
+  + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))'
+  + '|(?:\\s|\\b|\\\\?)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return (b.length - a.length); }).join('|') + ')(?:\\s(?![-+*/=])|\\b)',
   "g");
 
 function toUnicode (ascii)
@@ -317,17 +369,9 @@ function toUnicode (ascii)
         return subscript_UC;
       }
 
-      if (groups["greek"])
+      if (groups['greek'])
       {
-        var greek_map = {
-          "alpha": "α",
-          "gamma": "γ",
-          'eta': 'η',
-          'theta': 'θ',
-          "pi": "π"
-        };
-
-        return greek_map[match];
+        return greek_map[groups['greek']];
       }
 
       return match;
