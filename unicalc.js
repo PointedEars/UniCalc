@@ -246,9 +246,16 @@ var rxASCII2UC = jsx.regexp.RegExp(
   + '|(?:\\s|\\b|\\\\?)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return (b.length - a.length); }).join('|') + ')(?:\\s(?![-+*/=])|\\b)',
   "g");
 
+/**
+ * Return the Unicode equivalent for a LaTeX-like formula.
+ *
+ * @param {string} ascii
+ * @return {string}
+ *  The converted string.
+ */
 function toUnicode (ascii)
 {
-  var unicode = new jsx.regexp.String(ascii.value).replace(
+  var unicode = new jsx.regexp.String(ascii).replace(
     rxASCII2UC,
     function (match) {
       var groups = this.groups;
@@ -328,7 +335,7 @@ function toUnicode (ascii)
 
         if (!superscript_all_converted) {
           if (groups['superscript-in-braces']) {
-            return '^{' + superscript_ASCII + '}';
+            return '^{' + toUnicode(superscript_ASCII) + '}';
           }
 
           return '^' + superscript_ASCII;
@@ -360,7 +367,7 @@ function toUnicode (ascii)
 
         if (!subscript_all_converted) {
           if (groups['subscript-in-braces']) {
-            return '_{' + subscript_ASCII + '}';
+            return '_{' + toUnicode(subscript_ASCII) + '}';
           }
 
           return '_' + subscript_ASCII;
@@ -377,7 +384,12 @@ function toUnicode (ascii)
       return match;
     });
 
-  ascii.form.elements["unicode"].value = unicode;
+  return unicode;
+}
+
+function updateUnicode (asciiControl)
+{
+  asciiControl.form.elements['unicode'].value = toUnicode(asciiControl.value);
 }
 
 function calc (form)
