@@ -238,7 +238,7 @@ function toASCII (unicode)
 }
 
 var rxASCII2UC = jsx.regexp.RegExp(
-  '(?<operator>(!=|:=|=:|<==|<=|>=|<?-->|<--|\\|->|<?==>|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))'
+  '(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))'
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))'
