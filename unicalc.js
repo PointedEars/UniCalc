@@ -244,7 +244,7 @@ var rxASCII2UC = jsx.regexp.RegExp(
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
   + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
   + '|(?:\\s|\\b|\\\\?)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return (b.length - a.length); }).join('|') + ')(?:\\s(?![-+*/=])|\\b)',
-  "g");
+  "gs");
 
 /**
  * Return the Unicode equivalent for a LaTeX-like formula.
@@ -318,7 +318,7 @@ function toUnicode (ascii)
 
         var superscript_ASCII = groups['superscript-in-braces'] || groups['superscript-standalone'];
         var superscript_UC = superscript_ASCII.replace(
-          /alpha|beta|inf(?:ty)?|./g,
+          new jsx.regexp.RegExp('alpha|beta|inf(?:ty)?|.', 'gs'),
           function (match) {
             if (match in superscript_ASCII2UC_map) {
               return superscript_ASCII2UC_map[match];
@@ -326,6 +326,10 @@ function toUnicode (ascii)
 
             if (/[4-9]/.test(match)) {
               return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2070);
+            }
+
+            if (match == ' ') {
+              return match;
             }
 
             superscript_all_converted = false;
@@ -350,7 +354,7 @@ function toUnicode (ascii)
 
         var subscript_ASCII = groups['subscript-in-braces'] || groups['subscript-standalone'];
         var subscript_UC = subscript_ASCII.replace(
-          /beta|./g,
+          new jsx.regexp.RegExp('beta|.', 'gs'),
           function (match) {
             if (match in subscript_ASCII2UC_map) {
               return subscript_ASCII2UC_map[match];
@@ -358,6 +362,10 @@ function toUnicode (ascii)
 
             if (/[4-9]/.test(match)) {
               return String.fromCharCode(match.charCodeAt(0) - 0x30 + 0x2080);
+            }
+
+            if (match == ' ') {
+              return match;
             }
 
             subscript_all_converted = false;
