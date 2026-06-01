@@ -27,7 +27,7 @@
         width: 8em;
       }
 
-      input {
+      input, button {
         width: 100%;
       }
 
@@ -51,7 +51,7 @@
             onkeyup="updateUnicode(this)"
             oninput="updateUnicode(this)"
             ></td>
-            <td class="td3"><input type="submit" value="Calculate (Google)"></td>
+            <td class="td3"><button type="submit" accesskey="l">Ca<u>l</u>culate (Google)</button></td>
           </tr>
           <tr>
             <th><label for="unicode"><u>U</u>nicode formula</label></th>
@@ -59,7 +59,8 @@
               onkeyup="toASCII(this)"
               oninput="toASCII(this)"
               ></td>
-            <td class="td3"><input type="button" value="Copy" onclick='navigator.clipboard.writeText(this.form["unicode"].value)'></td>
+            <td class="td3"><button type="button" accesskey="c"
+              onclick='navigator.clipboard.writeText(this.form["unicode"].value)'><u>C</u>opy</button></td>
           </tr>
       </table>
     </form>
