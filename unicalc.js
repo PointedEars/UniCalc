@@ -241,8 +241,8 @@ var rxASCII2UC = jsx.regexp.RegExp(
   '(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|[-*/])|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|sum))'
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
-  + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>\\S+))'
-  + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>\\S+))'
+  + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
+  + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
   + '|(?:\\s|\\b|\\\\?)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return (b.length - a.length); }).join('|') + ')(?:\\s(?![-+*/=])|\\b)',
   "g");
 
