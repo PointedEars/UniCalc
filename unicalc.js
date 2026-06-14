@@ -242,8 +242,8 @@ var rxASCII2UC = jsx.regexp.RegExp(
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
-  + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
-  + '|(?:\\s|\\b|\\\\?)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return (b.length - a.length); }).join('|') + ')(?:\\s(?![-+*/=])|\\b)',
+  + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}_^\\][]+))'
+  + '|(?:^|\\s|\\\\)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return b.length - a.length; }).join('|') + ')',
   "gs");
 
 /**
@@ -317,9 +317,15 @@ function toUnicode (ascii)
         var superscript_all_converted = true;
 
         var superscript_ASCII = groups['superscript-in-braces'] || groups['superscript-standalone'];
-        var superscript_UC = superscript_ASCII.replace(
-          new jsx.regexp.RegExp('alpha|beta|inf(?:ty)?|.', 'gs'),
+        var superscript_UC = new jsx.regexp.String(superscript_ASCII).replace(
+          new jsx.regexp.RegExp('(?:^|\\s|\\\\)(?<greek>alpha|beta)|inf(?:ty)?|.', 'gs'),
           function (match) {
+            var groups = this.groups;
+            var greek = groups['greek'];
+            if (greek && greek in superscript_ASCII2UC_map) {
+              return superscript_ASCII2UC_map[greek];
+            }
+
             if (match in superscript_ASCII2UC_map) {
               return superscript_ASCII2UC_map[match];
             }
@@ -353,9 +359,17 @@ function toUnicode (ascii)
         var subscript_all_converted = true;
 
         var subscript_ASCII = groups['subscript-in-braces'] || groups['subscript-standalone'];
-        var subscript_UC = subscript_ASCII.replace(
-          new jsx.regexp.RegExp('beta|.', 'gs'),
-          function (match) {
+        var subscript_UC = jsx.regexp.String(subscript_ASCII).replace(
+          new jsx.regexp.RegExp('(?:^|\\s|\\\\)(?<greek>beta)|.', 'gs'),
+          function(match) {
+            var groups = this.groups;
+
+            var groups = this.groups;
+            var greek = groups['greek'];
+            if (greek && greek in subscript_ASCII2UC_map) {
+              return subscript_ASCII2UC_map[greek];
+            }
+
             if (match in subscript_ASCII2UC_map) {
               return subscript_ASCII2UC_map[match];
             }
