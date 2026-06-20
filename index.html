@@ -12,6 +12,7 @@
 
       th {
         width: 8em;
+        vertical-align: baseline;
         text-align: right;
       }
 
@@ -25,9 +26,15 @@
 
       .td3 {
         width: 8em;
+        vertical-align: baseline;
       }
 
-      input, button {
+      textarea {
+        width: 98%;
+        height: 3.5em;
+      }
+
+      button {
         width: 100%;
       }
 
@@ -47,18 +54,18 @@
       <table>
         <tr>
           <th><label for="ascii"><u>A</u>SCII formula</label></th>
-          <td><input type="search" id="ascii" name="q" accesskey="a"
+          <td><textarea type="search" id="ascii" name="q" accesskey="a"
             onkeyup="updateUnicode(this)"
             oninput="updateUnicode(this)"
-            ></td>
+            ></textarea></td>
             <td class="td3"><button type="submit" accesskey="l">Ca<u>l</u>culate (Google)</button></td>
           </tr>
           <tr>
             <th><label for="unicode"><u>U</u>nicode formula</label></th>
-            <td><input type="search" id="unicode" name="unicode" accesskey="u"
+            <td><textarea type="search" id="unicode" name="unicode" accesskey="u"
               onkeyup="toASCII(this)"
               oninput="toASCII(this)"
-              ></td>
+              ></textarea></td>
             <td class="td3"><button type="button" accesskey="c"
               onclick='navigator.clipboard.writeText(this.form["unicode"].value)'><u>C</u>opy</button></td>
           </tr>
