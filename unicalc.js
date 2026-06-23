@@ -437,6 +437,23 @@ function calc (form)
     "width=720,height=630,resizable");
 }
 
+/**
+ * Insert the LaTeX-like sequence for the selected symbol into the ASCII control.
+ * @param {HTMLButtonElement} insertButton
+ */
+function insertSymbol (insertButton)
+{
+  var form = insertButton.form;
+  var asciiControl = form.elements['ascii'];
+  var selectedValue = form.elements['symbol'].value;
+  if (selectedValue != '') {
+    var currentValue = asciiControl.value;
+    asciiControl.value = currentValue.substring(0, asciiControl.selectionStart)
+      + selectedValue + currentValue.substring(asciiControl.selectionEnd);
+    updateUnicode(asciiControl);
+  }
+}
+
 /* Microsoft Edge uses Alt+C to activate Copilot; work around this */
 if (/\bEdge?\b/.test(navigator.userAgent)) {
   document.addEventListener('DOMContentLoaded', function () {
