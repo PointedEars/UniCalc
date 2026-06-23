@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
   Object.entries(greek_map)
     .forEach(function(item) {
       var option = document.createElement('option');
-      option.value = item[0];
+      option.value = item[0] + ' ';
       option.text = item[1];
       ogGreek.appendChild(option);
     });
