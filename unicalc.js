@@ -475,6 +475,15 @@ document.addEventListener('DOMContentLoaded', function() {
       ogSubscripts.appendChild(option);
     });
 
+  var ogSuperscripts = document.getElementById('ogSuperscripts');
+  Object.entries(subscript_ASCII2UC_map)
+    .forEach(function(item) {
+      var option = document.createElement('option');
+      option.value = '^' + item[0];
+      option.text = item[1];
+      ogSuperscripts.appendChild(option);
+    });
+
   /* Microsoft Edge uses Alt+C to activate Copilot; work around this */
   if (/\bEdge?\b/.test(navigator.userAgent)) {
     var copyButton = document.getElementById('btCopy');
