@@ -425,3 +425,12 @@ function calc (form)
     form.target,
     "width=720,height=630,resizable");
 }
+
+/* Microsoft Edge uses Alt+C to activate Copilot; work around this */
+if (/\bEdge?\b/.test(navigator.userAgent)) {
+  document.addEventListener('DOMContentLoaded', function () {
+    var copyButton = document.getElementById('btCopy');
+    copyButton.accessKey = 'o';
+    copyButton.innerHTML = 'C<u>o</u>py';
+  });
+}
