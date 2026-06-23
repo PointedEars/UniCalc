@@ -455,11 +455,21 @@ function insertSymbol (insertButton)
   }
 }
 
-/* Microsoft Edge uses Alt+C to activate Copilot; work around this */
-if (/\bEdge?\b/.test(navigator.userAgent)) {
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
+  /** @type HTMLOptGroupElement */
+  var ogGreek = document.getElementById('ogGreek');
+  Object.entries(greek_map)
+    .forEach(function(item) {
+      var option = document.createElement('option');
+      option.value = item[0];
+      option.text = item[1];
+      ogGreek.appendChild(option);
+    });
+
+  /* Microsoft Edge uses Alt+C to activate Copilot; work around this */
+  if (/\bEdge?\b/.test(navigator.userAgent)) {
     var copyButton = document.getElementById('btCopy');
     copyButton.accessKey = 'o';
     copyButton.innerHTML = 'C<u>o</u>py';
-  });
-}
+  }
+});
