@@ -413,11 +413,22 @@ function toUnicode (ascii)
   return unicode;
 }
 
+/**
+ * Update the Unicode control with the converted text.
+ * @param {HTMLTextAreaElement} asciiControl
+ */
 function updateUnicode (asciiControl)
 {
   asciiControl.form.elements['unicode'].value = toUnicode(asciiControl.value);
 }
 
+/**
+ * Submit a formula to Google for calculation.
+ *
+ * @param {HTMLFormElement} form
+ * @returns {boolean}
+ *   `false` if the calculation windows could be opened, `true` otherwise.
+ */
 function calc (form)
 {
   return !window.open(
