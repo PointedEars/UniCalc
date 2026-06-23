@@ -56,12 +56,11 @@
           <th><label for="ascii"><u>A</u>SCII formula</label></th>
           <td><select name="symbol" title="Characters/Symbols">
             <option value="">Select character/symbol</option>
-            <optgroup id="greek" label="Greek letters">
-              <option value="^alpha">&alpha;</option>
+            <optgroup id="ogGreek" label="Greek letters">
             </optgroup>
-            <optgroup id="math" label="Mathematical symbols"></optgroup>
-            <optgroup id="subscripts" label="Subscripts"></optgroup>
-            <optgroup id="superscripts" label="Superscripts"></optgroup>
+            <optgroup id="ogMath" label="Mathematical symbols"></optgroup>
+            <optgroup id="ogSubscripts" label="Subscripts"></optgroup>
+            <optgroup id="ogSuperscripts" label="Superscripts"></optgroup>
           </select><button type="button" onclick="insertSymbol(this)">Insert</button><br>
             <textarea type="search" id="ascii" name="q" accesskey="a"
             onkeyup="updateUnicode(this)"
