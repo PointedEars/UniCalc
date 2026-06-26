@@ -239,7 +239,8 @@ function toASCII (unicode)
 
 /* TODO: For Greek letter names, remove leading space whitespace only if it follows a word character */
 var rxASCII2UC = jsx.regexp.RegExp(
-  '(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|\\+-|-\\+|[-/]|(?<=^|\\s)(?:\\([+X]\\)|[*.])(?=\\s|$))|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|partial|sum))'
+  '(?:^|\\s|\\\\)(?<letter-like>imath)'
+  + '|(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|\\+-|-\\+|[-/]|(?<=^|\\s)(?:\\([+X]\\)|[*.])(?=\\s|$))|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|partial|sum))'
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
@@ -260,6 +261,13 @@ function toUnicode (ascii)
     rxASCII2UC,
     function (match) {
       var groups = this.groups;
+
+      if (groups['letter-like'])
+      {
+        return jsx.object.getProperty({
+          'imath': 'ⅈ'
+        }, groups['letter-like']);
+      }
 
       if (groups['operator-macro'])
       {
