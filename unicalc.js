@@ -11,6 +11,11 @@ var blackboard_map = jsx.object.getDataObject({
   'Z': 'ℤ'
 });
 
+var script_map = jsx.object.getDataObject({
+  'L': 'ℒ'
+});
+
+
 var greek_map = {
   'alpha': 'α',
   'beta': 'β',
@@ -242,6 +247,7 @@ var rxASCII2UC = jsx.regexp.RegExp(
   '(?:^|\\s|\\\\)(?<letter-like>imath)'
   + '|(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|\\+-|-\\+|[-/]|(?<=^|\\s)(?:\\([+X]\\)|[*.])(?=\\s|$))|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|partial|sum))'
   + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
+  + '|\\\\(?<script>[' + Object.keys(script_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
   + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}_^\\][]+))'
@@ -314,6 +320,10 @@ function toUnicode (ascii)
 
       if (groups['blackboard']) {
         return jsx.object.getProperty(blackboard_map, groups['blackboard']);
+      }
+
+      if (groups['script']) {
+        return jsx.object.getProperty(script_map, groups['script']);
       }
 
       if (groups["root"])
