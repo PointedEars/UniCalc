@@ -246,12 +246,12 @@ function toASCII (unicode)
 var rxASCII2UC = jsx.regexp.RegExp(
   '(?:^|\\s|\\\\)(?<letter-like>imath)'
   + '|(?<operator>(!=|:=|=:|<?==>|<==|<=|>=|<?-->|<--|\\|->|\\^!|\\+-|-\\+|[-/]|(?<=^|\\s)(?:\\([+X]\\)|[*.])(?=\\s|$))|(?:\\\\|\\b)(?<operator-macro>approx|neq?|int|(?:not ?)?in|partial|sum))'
-  + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
-  + '|\\\\(?<script>[' + Object.keys(script_map).join('') + '])'
   + '|\\b(?<root>(sq|cub)rt)\\b'
   + '|\\^(?<superscript>\\{(?<superscript-in-braces>.+?)\\}|(?<superscript-standalone>[^\\s*/(){}\\]\\[^_]+))'
   + '|_(?<subscript>\\{(?<subscript-in-braces>.+?)\\}|(?<subscript-standalone>[^\\s*/(){}_^\\][]+))'
-  + '|(?:^|\\s|\\\\)(?<greek>' + Object.keys(greek_map).sort(function (a, b) { return b.length - a.length; }).join('|') + ')',
+  + '|(?:(?:^|\\s|\\\\)|(?<greek-prefix>[()]))(?<greek>' + Object.keys(greek_map).sort(function(a, b) { return b.length - a.length; }).join('|') + ')'
+  + '|\\\\(?<blackboard>[' + Object.keys(blackboard_map).join('') + '])'
+  + '|\\\\(?<script>[' + Object.keys(script_map).join('') + '])',
   "gs");
 
 /**
@@ -425,7 +425,7 @@ function toUnicode (ascii)
 
       if (groups['greek'])
       {
-        return greek_map[groups['greek']];
+        return (groups['greek-prefix'] || '') + greek_map[groups['greek']];
       }
 
       return match;
